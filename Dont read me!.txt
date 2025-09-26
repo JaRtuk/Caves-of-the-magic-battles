@@ -2,4 +2,9 @@ INSTALD:
 	https://sketchfab.com/3d-models/mining-trolley-3912b1c58fab411f8f5d1f12efb4fa3a
 
 
-PLAN
+PLAN:
+	Cave interier: 
+		https://sketchfab.com/3d-models/mine-rails-pieces-bf9a354e21724c47ba673466934c44e6
+		https://sketchfab.com/3d-models/canyon-cliff-rocks-01-5eacd35be7a04607baeb6fe0de7b0f91
+		https://sketchfab.com/3d-models/canyon-cliff-rocks-02-8801e7b9f81d40a7aadfffbe67e0d69a
+		https://sketchfab.com/3d-models/canyon-cliff-rocks-03-7736de59dd8b4e8e8b19e54ec2687a0f
