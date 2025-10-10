@@ -10,3 +10,6 @@ PLAN:
 		https://sketchfab.com/3d-models/canyon-cliff-rocks-03-7736de59dd8b4e8e8b19e54ec2687a0f
 		https://sketchfab.com/3d-models/polygon-dungeon-rocks-cda94be8051840d7ab3fb7aa457c78d6
 		https://sketchfab.com/3d-models/gothic-interior-kit-mid-poly-cd988423f3ff4cec8193cb1abfa11b8f
+
+	PORTALS IDIA:
+		https://sketchfab.com/3d-models/the-cave-of-eternity-db7952f26213449ea35a7f6099b91005
