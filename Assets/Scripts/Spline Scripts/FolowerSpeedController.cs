@@ -15,9 +15,9 @@ public class FolowerSpeedController : MonoBehaviour
         if (follower != null)
         {
             if (addSpeed)
-                follower.currentSpeed += speedChange;
+                follower.SetSpeed(follower.currentSpeed + speedChange);
             else
-                follower.currentSpeed -= speedChange;
+                follower.SetSpeed(follower.currentSpeed - speedChange);
         }
     }
 }
