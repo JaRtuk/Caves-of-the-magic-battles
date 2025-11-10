@@ -27,7 +27,7 @@ public class ShootingWeapon : MonoBehaviour
 
     private Transform Bullet;
 
-    void Start()
+    private void Start()
     {
         if (Weapon != null)
         {
@@ -38,7 +38,7 @@ public class ShootingWeapon : MonoBehaviour
             m_fire_effect = fire_transform.GetComponent<ParticleSystem>();
         }
     }
-    void Update()
+    private void Update()
     {
         if (IsHammerCharge && m_hammer_on_idle)
         {
@@ -53,24 +53,29 @@ public class ShootingWeapon : MonoBehaviour
                 m_play_fire_anim = false;
 
                 BulletShoot();
+
+                m_bullet_in_aria = false;
+                m_bullet_is_ready = false;
             }
             HammerHit();
             RotateBaranan();
         }
     }
 
-    void BulletShoot()
+    private void BulletShoot()
     {
         if (Bullet != null)
         {
             Destroy(Bullet.parent.gameObject);
+            Bullet = null;
         }
     }
     
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Main_bullet2_Low")
         {
+            
             m_bullet_in_aria = true;
             Bullet = other.transform;
         }
@@ -128,14 +133,8 @@ public class ShootingWeapon : MonoBehaviour
             m_cylinder_rotation_angle = -60;
             m_play_fire_anim = true;
 
-            if (m_bullet_is_ready)
-            {
-                m_bullet_in_aria = false;
-                m_bullet_is_ready = false;
-            }
-            else if (m_bullet_in_aria)
+            if (m_bullet_in_aria)
                 m_bullet_is_ready = true;
-
         }
     }
 }
