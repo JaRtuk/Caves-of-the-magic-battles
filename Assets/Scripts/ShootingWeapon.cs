@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit.AffordanceSystem.Receiver.Primitives;
+using UnityEngine.InputSystem;
 
 public class ShootingWeapon : MonoBehaviour
 {
     public GameObject Weapon;
+    public GrabController grabController;
     public bool Shot = false;
     public bool IsHammerCharge = false;
 
@@ -24,8 +22,22 @@ public class ShootingWeapon : MonoBehaviour
 
     private bool m_bullet_in_aria = false;
     private bool m_bullet_is_ready = false;
-
     private Transform Bullet;
+
+    public InputActionReference shootAction;
+    public InputActionReference chargeAction;
+
+
+    private void Awake()
+    {
+        shootAction.action.Enable();
+        shootAction.action.performed += ToggleShoot;
+        InputSystem.onDeviceChange += OnDeviceChange;
+
+        chargeAction.action.Enable();
+        chargeAction.action.performed += ToggleCharge;
+        InputSystem.onDeviceChange += OnDeviceChange;
+    }
 
     private void Start()
     {
@@ -38,8 +50,11 @@ public class ShootingWeapon : MonoBehaviour
             m_fire_effect = fire_transform.GetComponent<ParticleSystem>();
         }
     }
+
     private void Update()
     {
+        m_in_payer_arm = grabController.IsGrab();
+
         if (IsHammerCharge && m_hammer_on_idle)
         {
             HammerCharge();
@@ -59,6 +74,37 @@ public class ShootingWeapon : MonoBehaviour
             }
             HammerHit();
             RotateBaranan();
+        }
+    }
+
+    private void ToggleShoot(InputAction.CallbackContext context)
+    {
+        if (m_in_payer_arm)
+            Shot = true;
+    }
+
+    private void ToggleCharge(InputAction.CallbackContext context)
+    { 
+        if (m_in_payer_arm)
+            IsHammerCharge = true;
+    }
+    
+    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    {
+        switch (change)
+        {
+            case InputDeviceChange.Disconnected:
+                shootAction.action.Disable();
+                shootAction.action.performed -= ToggleShoot;
+                chargeAction.action.Disable();
+                chargeAction.action.performed -= ToggleCharge;
+                break;
+            case InputDeviceChange.Reconnected:
+                shootAction.action.Enable();
+                shootAction.action.performed += ToggleShoot;
+                chargeAction.action.Enable();
+                chargeAction.action.performed += ToggleCharge;
+                break;
         }
     }
 
@@ -136,5 +182,15 @@ public class ShootingWeapon : MonoBehaviour
             if (m_bullet_in_aria)
                 m_bullet_is_ready = true;
         }
+    }
+
+    private void OnDestroy()
+    {
+        shootAction.action.Disable();
+        shootAction.action.performed -= ToggleShoot;
+        InputSystem.onDeviceChange -= OnDeviceChange;
+        chargeAction.action.Disable();
+        chargeAction.action.performed -= ToggleShoot;
+        InputSystem.onDeviceChange -= OnDeviceChange;
     }
 }
