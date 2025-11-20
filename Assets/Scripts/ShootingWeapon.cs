@@ -5,8 +5,10 @@ public class ShootingWeapon : MonoBehaviour
 {
     public GameObject Weapon;
     public GrabController grabController;
-    public bool Shot = false;
-    public bool IsHammerCharge = false;
+    public InputActionReference shootAction;
+    public InputActionReference chargeAction;
+    private bool m_shot = false;
+    private bool m_is_hammer_charge = false;
 
     private bool m_in_payer_arm = false;
 
@@ -24,8 +26,7 @@ public class ShootingWeapon : MonoBehaviour
     private bool m_bullet_is_ready = false;
     private Transform Bullet;
 
-    public InputActionReference shootAction;
-    public InputActionReference chargeAction;
+
 
 
     private void Awake()
@@ -55,12 +56,12 @@ public class ShootingWeapon : MonoBehaviour
     {
         m_in_payer_arm = grabController.IsGrab();
 
-        if (IsHammerCharge && m_hammer_on_idle)
+        if (m_is_hammer_charge && m_hammer_on_idle)
         {
             HammerCharge();
         }
 
-        if (Shot && IsHammerCharge)
+        if (m_shot && m_is_hammer_charge)
         {
             if (m_play_fire_anim && m_bullet_in_aria && m_bullet_is_ready)
             {
@@ -79,14 +80,14 @@ public class ShootingWeapon : MonoBehaviour
 
     private void ToggleShoot(InputAction.CallbackContext context)
     {
-        if (m_in_payer_arm)
-            Shot = true;
+        if (m_in_payer_arm && m_is_hammer_charge)
+            m_shot = true;
     }
 
     private void ToggleCharge(InputAction.CallbackContext context)
     { 
         if (m_in_payer_arm)
-            IsHammerCharge = true;
+            m_is_hammer_charge = true;
     }
     
     private void OnDeviceChange(InputDevice device, InputDeviceChange change)
@@ -174,8 +175,8 @@ public class ShootingWeapon : MonoBehaviour
         else
         {
             m_cylinder_LP.Rotate(m_cylinder_rotation_angle, 0, 0, Space.Self);
-            Shot = false;
-            IsHammerCharge = false;
+            m_shot = false;
+            m_is_hammer_charge = false;
             m_cylinder_rotation_angle = -60;
             m_play_fire_anim = true;
 

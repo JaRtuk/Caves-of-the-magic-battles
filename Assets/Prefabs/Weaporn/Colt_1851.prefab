@@ -1280,6 +1280,7 @@ GameObject:
   - component: {fileID: 2739421630194385213}
   - component: {fileID: 7803520287831795995}
   - component: {fileID: 7263852783838711250}
+  - component: {fileID: 4179017994852765852}
   m_Layer: 0
   m_Name: Colt_1851
   m_TagString: Untagged
@@ -1355,8 +1356,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Weapon: {fileID: 3428384445823887721}
-  Shot: 0
-  IsHammerCharge: 0
+  grabController: {fileID: 4179017994852765852}
+  shootAction: {fileID: -8735986769133159642, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  chargeAction: {fileID: 7458933037329006756, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!54 &7803520287831795995
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1379,8 +1381,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1434,10 +1436,34 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4179017994852765852}
+        m_TargetAssemblyTypeName: GrabController, Assembly-CSharp
+        m_MethodName: OnGrab
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4179017994852765852}
+        m_TargetAssemblyTypeName: GrabController, Assembly-CSharp
+        m_MethodName: OnUngrab
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_FirstFocusEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -1488,7 +1514,7 @@ MonoBehaviour:
       m_Calls: []
   m_AttachTransform: {fileID: 2361205944075679615}
   m_SecondaryAttachTransform: {fileID: 0}
-  m_UseDynamicAttach: 0
+  m_UseDynamicAttach: 1
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
   m_SnapToColliderVolume: 1
@@ -1499,15 +1525,15 @@ MonoBehaviour:
   m_VelocityScale: 1
   m_AngularVelocityDamping: 1
   m_AngularVelocityScale: 1
-  m_TrackPosition: 1
+  m_TrackPosition: 0
   m_SmoothPosition: 0
   m_SmoothPositionAmount: 8
   m_TightenPosition: 0.1
-  m_TrackRotation: 1
+  m_TrackRotation: 0
   m_SmoothRotation: 0
   m_SmoothRotationAmount: 8
   m_TightenRotation: 0.1
-  m_TrackScale: 1
+  m_TrackScale: 0
   m_SmoothScale: 0
   m_SmoothScaleAmount: 8
   m_TightenScale: 0.1
@@ -1536,6 +1562,22 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
+--- !u!114 &4179017994852765852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428384445823887721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: decde422dc11b6540b831982afb12d1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionOffset: {x: 0.05, y: -0.15, z: 0.2}
+  rotationOffset: {x: 180, y: 90, z: 180}
+  useCustomAttachPoint: 0
+  customAttachPoint: {fileID: 0}
 --- !u!1 &3570627049722615656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1628,6 +1670,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6413818632463846605}
+  - component: {fileID: 5361731724334012113}
+  - component: {fileID: 3907752567153649898}
   m_Layer: 0
   m_Name: Cylinder_Poivot
   m_TagString: Untagged
@@ -1663,6 +1707,40 @@ Transform:
   - {fileID: 2343134998427915318}
   m_Father: {fileID: 6038018128105210579}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5361731724334012113
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3960526381257207497}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.04200459, y: 0.039213903, z: 0.028172804}
+  m_Center: {x: 0.1128316, y: 0.018504266, z: 0.035913624}
+--- !u!114 &3907752567153649898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3960526381257207497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b256df25387c9e444b803bea5be51849, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AmmoCylinder: {fileID: 8885767795862667134}
 --- !u!1 &3983778650315903366
 GameObject:
   m_ObjectHideFlags: 0
@@ -3451,7 +3529,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
@@ -4362,7 +4440,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.0117
   m_Height: 0.035
@@ -4791,6 +4869,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1047002283835026046}
     m_Modifications:
+    - target: {fileID: -3333000351137983346, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1020826997748999882, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_Name
       value: Bullet_01_Low (3)
@@ -4925,6 +5015,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1047002283835026046}
     m_Modifications:
+    - target: {fileID: -3333000351137983346, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1020826997748999882, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_Name
       value: Bullet_01_Low (2)
@@ -5059,6 +5161,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1047002283835026046}
     m_Modifications:
+    - target: {fileID: -3333000351137983346, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1020826997748999882, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_Name
       value: Bullet_01_Low
@@ -5077,15 +5191,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3594508072681789585, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.09919406
+      value: -0.0994
       objectReference: {fileID: 0}
     - target: {fileID: 3594508072681789585, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0062241303
+      value: -0.00008
       objectReference: {fileID: 0}
     - target: {fileID: 3594508072681789585, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0040627383
+      value: 0.00742
       objectReference: {fileID: 0}
     - target: {fileID: 3594508072681789585, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5193,6 +5307,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1047002283835026046}
     m_Modifications:
+    - target: {fileID: -3333000351137983346, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1020826997748999882, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_Name
       value: Bullet_01_Low (1)
@@ -5425,6 +5551,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1047002283835026046}
     m_Modifications:
+    - target: {fileID: -3333000351137983346, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -145484625481287650, guid: f0c0992e4562d824898f07474b700738, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1020826997748999882, guid: f0c0992e4562d824898f07474b700738, type: 3}
       propertyPath: m_Name
       value: Bullet_01_Low (4)
