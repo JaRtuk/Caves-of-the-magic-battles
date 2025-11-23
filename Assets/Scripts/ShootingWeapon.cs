@@ -3,31 +3,31 @@ using UnityEngine.InputSystem;
 
 public class ShootingWeapon : MonoBehaviour
 {
-    public GameObject Weapon;
-    public GrabController grabController;
+    [Header("Weapon References")]
+    public GameObject           Weapon;
+    public GrabController       grabController;
+    public ReloadingWeapon      reloadingWeapon;
+    [Header("Input Actions")]
     public InputActionReference shootAction;
     public InputActionReference chargeAction;
-    private bool m_shot = false;
-    private bool m_is_hammer_charge = false;
 
-    private bool m_in_payer_arm = false;
 
-    private bool m_play_fire_anim = true;
+    private Transform      m_cylinder_LP;
+    private Transform      m_hammer_LP;
+    private Transform      Bullet;
     private ParticleSystem m_fire_effect;
+    private BoxCollider    m_shootAria;
 
-    private Transform m_cylinder_LP;
+    private bool m_hammer_on_idle   = true;
+    private bool m_play_fire_anim   = true;
+    private bool m_shot             = false;
+    private bool m_is_hammer_charge = false;
+    private bool m_in_payer_arm     = false;
+    private bool m_bullet_in_aria   = false;
+    private bool m_bullet_is_ready  = false;
+
     private float m_cylinder_rotation_angle = -60;
-
-    private Transform m_hammer_LP;
-    private float m_hammer_rotation_angle = 46;
-    private bool m_hammer_on_idle = true;
-
-    private bool m_bullet_in_aria = false;
-    private bool m_bullet_is_ready = false;
-    private Transform Bullet;
-
-
-
+    private float m_hammer_rotation_angle   = 46;
 
     private void Awake()
     {
@@ -44,8 +44,10 @@ public class ShootingWeapon : MonoBehaviour
     {
         if (Weapon != null)
         {
-            m_cylinder_LP = Weapon.transform.Find("Cylinder_Poivot");
+            m_cylinder_LP = Weapon.transform.Find("Cylinder_Reloadeble").Find("Cylinder_Pivot");
             m_hammer_LP = Weapon.transform.Find("HammerPivot");
+            m_shootAria = Weapon.transform.Find("Area_for_bullet").GetComponent<BoxCollider>();
+            CheckForObjectsInsideTrigger();
 
             Transform fire_transform = Weapon.transform.Find("Fire_Hit");
             m_fire_effect = fire_transform.GetComponent<ParticleSystem>();
@@ -74,7 +76,7 @@ public class ShootingWeapon : MonoBehaviour
                 m_bullet_is_ready = false;
             }
             HammerHit();
-            RotateBaranan();
+            RotateBaraban();
         }
     }
 
@@ -82,6 +84,8 @@ public class ShootingWeapon : MonoBehaviour
     {
         if (m_in_payer_arm && m_is_hammer_charge)
             m_shot = true;
+        else if (!m_is_hammer_charge && m_in_payer_arm)
+            RotateBaraban();
     }
 
     private void ToggleCharge(InputAction.CallbackContext context)
@@ -113,14 +117,14 @@ public class ShootingWeapon : MonoBehaviour
     {
         if (Bullet != null)
         {
-            Destroy(Bullet.parent.gameObject);
+            Destroy(Bullet.gameObject);
             Bullet = null;
         }
     }
     
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Main_bullet2_Low")
+        if (other.tag == "Ammo")
         {
             
             m_bullet_in_aria = true;
@@ -163,7 +167,7 @@ public class ShootingWeapon : MonoBehaviour
         }
     }
     
-    private void RotateBaranan()
+    private void RotateBaraban()
     {
         if (m_cylinder_rotation_angle < -2f)
         {
@@ -177,6 +181,8 @@ public class ShootingWeapon : MonoBehaviour
             m_cylinder_LP.Rotate(m_cylinder_rotation_angle, 0, 0, Space.Self);
             m_shot = false;
             m_is_hammer_charge = false;
+
+
             m_cylinder_rotation_angle = -60;
             m_play_fire_anim = true;
 
@@ -189,9 +195,30 @@ public class ShootingWeapon : MonoBehaviour
     {
         shootAction.action.Disable();
         shootAction.action.performed -= ToggleShoot;
-        InputSystem.onDeviceChange -= OnDeviceChange;
+        // InputSystem.onDeviceChange -= OnDeviceChange;
         chargeAction.action.Disable();
         chargeAction.action.performed -= ToggleShoot;
         InputSystem.onDeviceChange -= OnDeviceChange;
+    }
+
+    private void CheckForObjectsInsideTrigger()
+    {
+        Vector3 center = m_shootAria.transform.TransformPoint(m_shootAria.center);
+        Vector3 halfExtents = m_shootAria.size * 0.5f;
+        Vector3 scale = m_shootAria.transform.lossyScale;
+        halfExtents = Vector3.Scale(halfExtents, scale);
+        
+        Quaternion orientation = m_shootAria.transform.rotation;
+        
+        Collider[] collidersInside = Physics.OverlapBox(center, halfExtents, orientation);
+        
+        foreach (Collider collider in collidersInside)
+        {
+            if (collider.CompareTag("Ammo"))
+            {
+                m_bullet_in_aria  = true;
+                m_bullet_is_ready = true;
+            }
+        }
     }
 }

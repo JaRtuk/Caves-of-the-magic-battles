@@ -42,7 +42,7 @@ public class GrabController : MonoBehaviour
         {
             // Используем кастомную точку захвата
             objectToGrab.position = hand.position;
-            objectToGrab.rotation = hand.rotation;
+            objectToGrab.localRotation = hand.rotation;
             
             // Компенсируем смещение кастомной точки
             Vector3 offset = objectToGrab.position - customAttachPoint.position;
