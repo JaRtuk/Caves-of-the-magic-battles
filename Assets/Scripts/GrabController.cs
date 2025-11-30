@@ -1,3 +1,4 @@
+using Bhaptics.SDK2;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,6 +68,8 @@ public class GrabController : MonoBehaviour
         {
             rb.isKinematic = false;
         }
+
+        BhapticsLibrary.Play("throw");
         
         args.interactableObject.transform.SetParent(null);
         onGrab = false;

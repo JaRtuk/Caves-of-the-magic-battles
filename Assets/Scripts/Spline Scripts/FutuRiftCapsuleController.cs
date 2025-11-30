@@ -20,6 +20,8 @@ public class FutuRiftCapsuleController : MonoBehaviour
     [Tooltip("Max tilt angle in degrees")]
     public float maxTiltAngle = 25f;
 
+    public VRBoardingSystem _vRBoardingSystem;
+
     // Motion tracking
     private Vector3 _lastPosition;
     private Vector3 _velocity;
@@ -34,6 +36,8 @@ public class FutuRiftCapsuleController : MonoBehaviour
 
     private FutuRiftController _futuRiftController;
 
+    private bool _playerInTrolley = false;
+
     void Awake()
     {
         InitializeFutuRift();
@@ -43,9 +47,14 @@ public class FutuRiftCapsuleController : MonoBehaviour
 
     void Update()
     {
-        CalculateMotion();
-        ApplyCapsuleTilting();
+        _playerInTrolley = _vRBoardingSystem.IsBoarded();
+        if(_playerInTrolley)
+        {
+            CalculateMotion();
+            ApplyCapsuleTilting();
+        }
     }
+
 
     private void InitializeFutuRift()
     {
@@ -132,6 +141,11 @@ public class FutuRiftCapsuleController : MonoBehaviour
     void OnDisable()
     {
         _futuRiftController?.Stop();
+    }
+        
+    public bool isInTrolley() 
+    {
+        return _playerInTrolley;
     }
 
     // Data structure for motion information

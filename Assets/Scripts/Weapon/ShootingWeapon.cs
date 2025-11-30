@@ -1,3 +1,4 @@
+using Bhaptics.SDK2;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -80,12 +81,26 @@ public class ShootingWeapon : MonoBehaviour
         }
     }
 
+    // private void ToggleShoot(InputAction.CallbackContext context)
+    // {
+    //     if (m_in_payer_arm && m_is_hammer_charge)
+    //         m_shot = true;
+    //     else if (!m_is_hammer_charge && m_in_payer_arm)
+    //         RotateBaraban();
+    // }
+
     private void ToggleShoot(InputAction.CallbackContext context)
     {
         if (m_in_payer_arm && m_is_hammer_charge)
+        {
             m_shot = true;
+
+            BhapticsLibrary.Play("pistol_recoil");
+        }
         else if (!m_is_hammer_charge && m_in_payer_arm)
+        {
             RotateBaraban();
+        }
     }
 
     private void ToggleCharge(InputAction.CallbackContext context)

@@ -199,6 +199,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using Bhaptics.SDK2;
 
 public class SplineFollower : MonoBehaviour
 {
@@ -235,6 +236,9 @@ public class SplineFollower : MonoBehaviour
     private Quaternion targetRotation;
     private float splineLength = 0f;
     private bool hasCompletedPath = false;
+
+    private float hapticTimer = 0f;
+    private float hapticInterval = 0.22f;
 
     // Events
     public System.Action OnPathStarted;
@@ -288,7 +292,21 @@ public class SplineFollower : MonoBehaviour
         // Update rotation
         UpdateRotation(t);
 
-        // Capsule controller will automatically handle tilting based on our movement
+        if (currentSpeed > 0.05f && capsuleController != null && capsuleController.isInTrolley())
+        {
+            hapticTimer += Time.deltaTime;
+
+            if (hapticTimer >= hapticInterval)
+            {
+                BhapticsLibrary.Play("ride_in_trolley");
+                hapticTimer = 0f;
+            }
+        }
+        else
+        {
+            hapticTimer = 0f;
+        }
+
         OnProgressChanged?.Invoke(t);
     }
 
