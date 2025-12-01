@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Bhaptics.SDK2;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,7 +18,7 @@ public class PlayerHalth : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(m_player_helth);
+        //Debug.Log(m_player_helth);
         if (m_player_helth <= 0)
             SceneManager.LoadScene(1);
     }
@@ -33,7 +34,8 @@ public class PlayerHalth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        m_player_helth -= damage;        
+        m_player_helth -= damage;
+        BhapticsLibrary.Play("arrow_hit");
     }
 
     public void Heal(float r_heal_value)

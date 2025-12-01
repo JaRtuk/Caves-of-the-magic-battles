@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class EnemyArcher3D : MonoBehaviour
+public class EnemyArcher : MonoBehaviour
 {
     [Header("Player Settings")]
     public Transform player;
     public float detectionRange = 15f;
-    public LayerMask obstacleMask; // слои препятствий (стены). НЕ включай слой игрока сюда.
+    public LayerMask obstacleMask; 
 
     [Header("Shooting Settings")]
     public GameObject arrowPrefab;
@@ -13,9 +13,11 @@ public class EnemyArcher3D : MonoBehaviour
     public float shootCooldown = 1.5f;
     private float shootTimer = 0f;
     public float arrowSpeed = 20f;
+    [Tooltip("Смещение при спавне стрелы вперёд, чтобы не пересекаться с коллайдером стрелка")]
+    public float spawnForwardOffset = 0.5f;
 
     [Header("Accuracy")]
-    [Range(0f,1f)] public float hitChance = 0.30f; // ~1 из 3-4
+    [Range(0f, 1f)] public float hitChance = 0.30f;
 
     [Header("Animation")]
     public Animator animator;
@@ -23,6 +25,8 @@ public class EnemyArcher3D : MonoBehaviour
 
     [Header("Debug")]
     public bool debugRays = true;
+
+    private float health = 100;
 
     void Start()
     {
@@ -33,6 +37,9 @@ public class EnemyArcher3D : MonoBehaviour
 
     void Update()
     {
+        if (health <= 0)
+            Destroy(animator.gameObject);
+
         shootTimer += Time.deltaTime;
 
         if (player == null) return;
@@ -65,31 +72,25 @@ public class EnemyArcher3D : MonoBehaviour
         if (shootPoint == null || player == null) return false;
 
         Vector3 origin = shootPoint.position;
-        Vector3 dir = (player.position - origin).normalized;
+        Vector3 dir = (player.position - origin);
+        float distToPlayer = dir.magnitude;
+
+        if (distToPlayer > detectionRange) return false;
+
+        Vector3 dirNorm = dir.normalized;
 
         if (debugRays)
-            Debug.DrawRay(origin, dir * detectionRange, Color.yellow, 0.2f);
+            Debug.DrawRay(origin, dirNorm * distToPlayer, Color.yellow, 0.1f);
 
         RaycastHit hit;
-        // Raycast, проверяем первый попавшийся коллайдер на линии
-        if (Physics.Raycast(origin, dir, out hit, detectionRange))
+        if (Physics.Raycast(origin, dirNorm, out hit, distToPlayer, obstacleMask))
         {
-            // Если первым коллайдером оказался игрок — видим
-            if (hit.transform == player || hit.collider.CompareTag("Player"))
-            {
-                if (debugRays) Debug.DrawLine(origin, hit.point, Color.green, 0.2f);
-                return true;
-            }
-            else
-            {
-                if (debugRays) Debug.DrawLine(origin, hit.point, Color.red, 0.2f);
-                // попал во что-то другое — это препятствие
-                return false;
-            }
+            if (debugRays) Debug.DrawLine(origin, hit.point, Color.red, 0.15f);
+            return false; 
         }
 
-        // ничем не попал — не видим
-        return false;
+        if (debugRays) Debug.DrawLine(origin, origin + dirNorm * distToPlayer, Color.green, 0.15f);
+        return true;
     }
 
     void StartAiming()
@@ -112,14 +113,14 @@ public class EnemyArcher3D : MonoBehaviour
 
     void TryShoot()
     {
-        // На всякий случай защита
         if (arrowPrefab == null || shootPoint == null || player == null)
         {
             Debug.LogWarning("[EnemyArcherVR] Missing references - cannot shoot");
             return;
         }
 
-        // Перед созданием стрелы можно проверить ещё раз линию (устойчивее)
+        if (!CanSeePlayer()) return;
+
         Vector3 origin = shootPoint.position;
         Vector3 baseDir = (player.position - origin).normalized;
 
@@ -129,17 +130,34 @@ public class EnemyArcher3D : MonoBehaviour
 
         if (!shouldHit)
         {
-            // добавляем случайное отклонение (в градусах)
             float angleOffsetY = Random.Range(-25f, 25f);
-            float angleOffsetX = Random.Range(-10f, 10f); // небольшое вертикальное смещение
+            float angleOffsetX = Random.Range(-10f, 10f);
             Quaternion rot = Quaternion.Euler(angleOffsetX, angleOffsetY, 0f);
             finalDir = rot * baseDir;
         }
 
-        // Instantiate стрелы
-        GameObject arrowGO = Instantiate(arrowPrefab, shootPoint.position, Quaternion.LookRotation(finalDir));
-        Arrow arrowScript = arrowGO.GetComponent<Arrow>();
+        Vector3 spawnPos = shootPoint.position + finalDir * spawnForwardOffset;
+
+        GameObject arrowGO = Instantiate(arrowPrefab, spawnPos, Quaternion.LookRotation(finalDir));
+
+
+        if (debugRays) Debug.Log("[EnemyArcherVR] Create arrow at " + spawnPos);
+
+        Collider[] ownerCols = GetComponentsInChildren<Collider>();
+        Collider[] arrowCols = arrowGO.GetComponentsInChildren<Collider>();
+        foreach (var a in arrowCols)
+        {
+            foreach (var c in ownerCols)
+            {
+                if (a != null && c != null)
+                {
+                    Physics.IgnoreCollision(a, c, true);
+                }
+            }
+        }
+
         Rigidbody rb = arrowGO.GetComponent<Rigidbody>();
+        Arrow arrowScript = arrowGO.GetComponent<Arrow>();
 
         if (arrowScript != null)
         {
@@ -147,14 +165,27 @@ public class EnemyArcher3D : MonoBehaviour
         }
         else if (rb != null)
         {
-            // fallback: если нет скрипта, выдаём скорость rigidbody
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rb.velocity = finalDir * arrowSpeed;
         }
         else
         {
-            Debug.LogWarning("[EnemyArcherVR] Arrow prefab has neither Arrow3D script nor Rigidbody. It won't move.");
+            Debug.LogWarning("[EnemyArcherVR] Arrow prefab has neither Arrow script nor Rigidbody. It won't move.");
         }
 
         if (animator) animator.SetTrigger("shoot");
+    }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.tag == "Ammo")
+    //    {
+    //        health -= 50;
+    //    }
+    //}
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        Debug.Log("Take Damage: " + damage);
     }
 }

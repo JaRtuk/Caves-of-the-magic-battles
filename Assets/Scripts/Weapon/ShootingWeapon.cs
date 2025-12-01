@@ -99,7 +99,7 @@ public class ShootingWeapon : MonoBehaviour
         }
         else if (!m_is_hammer_charge && m_in_payer_arm)
         {
-            RotateBaraban();
+            //RotateBaraban();
         }
     }
 
@@ -132,16 +132,18 @@ public class ShootingWeapon : MonoBehaviour
     {
         if (Bullet != null)
         {
-            Destroy(Bullet.gameObject);
+            Vector3 localDir = new Vector3(1, 0, 0);
+            Vector3 worldDir = transform.TransformDirection(localDir);
+            Bullet.SetParent(null);
+            Bullet.GetComponent<Bullet>().StartShoot(worldDir);
             Bullet = null;
         }
     }
     
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Ammo")
+        if (other.tag == "Ammo" && other.GetComponent<Bullet>() != null)
         {
-            
             m_bullet_in_aria = true;
             Bullet = other.transform;
         }

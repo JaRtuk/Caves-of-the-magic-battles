@@ -23,7 +23,7 @@ public class ReloadingWeapon : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collide with " + other.name + " tag is " + other.tag);
+        //Debug.Log("Collide with " + other.name + " tag is " + other.tag);
         if (other.tag == "Ammo" && !m_is_busy)
         {
             other.transform.SetParent(m_main_ogj.transform);

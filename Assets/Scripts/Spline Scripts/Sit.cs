@@ -49,6 +49,7 @@ public class VRBoardingSystem : MonoBehaviour
         {
             BoardTelega();
         }
+        telega.StartMoving();
     }
 
     public void BoardTelega()

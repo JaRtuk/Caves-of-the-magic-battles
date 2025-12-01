@@ -2,17 +2,24 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
+    [Header("Arrow Settings")]
     public float speed = 20f;
-    public float lifeTime = 6f;
-    public int damage = 1;
+    public float lifeTime = 10f;
+    public int damage = 10;
     public bool useRigidbody = true;
 
     private Vector3 direction;
     private Rigidbody rb;
+    private bool hasDealtDamage = false;
+
+    // Фиксированный поворот модели стрелы
+    private readonly Quaternion modelRotationFix = Quaternion.Euler(-90f, 0f, 0f);
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.isKinematic = true;
     }
 
     public void Initialize(Vector3 dir, float overrideSpeed = -1f)
@@ -22,12 +29,10 @@ public class Arrow : MonoBehaviour
 
         if (useRigidbody && rb != null)
         {
-            rb.velocity = direction * speed;
             rb.isKinematic = false;
-        }
-        else
-        {
-            // если Rigidbody нет или не хотим его использовать, то просто двигаем вручную
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            rb.velocity = direction * speed;
+            rb.angularVelocity = Vector3.zero;
         }
 
         Destroy(gameObject, lifeTime);
@@ -38,36 +43,47 @@ public class Arrow : MonoBehaviour
         if ((!useRigidbody) || rb == null)
         {
             transform.position += direction * speed * Time.deltaTime;
-        }
 
-        // поворачиваем по направлению движения (если скорость ненулевая)
-        if (direction.sqrMagnitude > 0.0001f)
-            transform.rotation = Quaternion.LookRotation(direction);
+            transform.rotation =
+                Quaternion.LookRotation(direction) *
+                modelRotationFix;
+        }
+        else
+        {
+            if (rb.velocity.sqrMagnitude > 0.01f)
+            {
+                transform.rotation =
+                    Quaternion.LookRotation(rb.velocity) *
+                    modelRotationFix;
+            }
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        // попадание в игрока
+        if (hasDealtDamage) return;
+        hasDealtDamage = true;
+
         if (collision.collider.CompareTag("Player"))
         {
             var hp = collision.collider.GetComponent<PlayerHalth>();
             if (hp != null) hp.TakeDamage(damage);
         }
 
-        // можно зафиксировать стрелу в объекте:
-        // rb.isKinematic = true;
-        // rb.velocity = Vector3.zero;
         Destroy(gameObject);
     }
 
-    // если используешь триггер-коллайдер:
     void OnTriggerEnter(Collider other)
     {
+        if (hasDealtDamage) return;
+        hasDealtDamage = true;
+
         if (other.CompareTag("Player"))
         {
             var hp = other.GetComponent<PlayerHalth>();
             if (hp != null) hp.TakeDamage(damage);
-            Destroy(gameObject);
         }
+
+        Destroy(gameObject);
     }
 }
