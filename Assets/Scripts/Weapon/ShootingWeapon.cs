@@ -81,14 +81,6 @@ public class ShootingWeapon : MonoBehaviour
         }
     }
 
-    // private void ToggleShoot(InputAction.CallbackContext context)
-    // {
-    //     if (m_in_payer_arm && m_is_hammer_charge)
-    //         m_shot = true;
-    //     else if (!m_is_hammer_charge && m_in_payer_arm)
-    //         RotateBaraban();
-    // }
-
     private void ToggleShoot(InputAction.CallbackContext context)
     {
         if (m_in_payer_arm && m_is_hammer_charge)
@@ -212,7 +204,6 @@ public class ShootingWeapon : MonoBehaviour
     {
         shootAction.action.Disable();
         shootAction.action.performed -= ToggleShoot;
-        // InputSystem.onDeviceChange -= OnDeviceChange;
         chargeAction.action.Disable();
         chargeAction.action.performed -= ToggleShoot;
         InputSystem.onDeviceChange -= OnDeviceChange;

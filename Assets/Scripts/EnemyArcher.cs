@@ -176,13 +176,6 @@ public class EnemyArcher : MonoBehaviour
         if (animator) animator.SetTrigger("shoot");
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.tag == "Ammo")
-    //    {
-    //        health -= 50;
-    //    }
-    //}
     public void TakeDamage(float damage)
     {
         health -= damage;

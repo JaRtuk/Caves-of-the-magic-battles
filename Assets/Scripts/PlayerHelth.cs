@@ -18,19 +18,10 @@ public class PlayerHalth : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(m_player_helth);
         if (m_player_helth <= 0)
             SceneManager.LoadScene(1);
     }
 
-    // void OnTriggerEnter(Collider other)
-    // {
-    //     if (other.tag == "EnemyAmmo")
-    //     {
-    //         m_player_helth -= 15;
-    //         Destroy(other.gameObject);
-    //     }
-    // }
 
     public void TakeDamage(float damage)
     {

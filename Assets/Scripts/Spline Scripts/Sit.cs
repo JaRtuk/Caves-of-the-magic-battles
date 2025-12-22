@@ -5,17 +5,18 @@ using UnityEngine.UI;
 public class VRBoardingSystem : MonoBehaviour
 {
     [Header("XR References")]
-    public GameObject xrOrigin; // XR Origin игрока
+    public GameObject xrOrigin; 
     
     [Header("Telega References")]
-    public SplineFollower telega; // Тележка
-    public Transform seatPoint; // Точка сиденья в тележке
+    public SplineFollower telega; 
+    public Transform seatPoint;
     
-    [Header("UI")]
-    public GameObject boardButton; // UI кнопка для посадки
+    public GameObject boardButton;
+    public GameObject startDoor;
 
     private CharacterController xrCharacterController;
     private bool isBoarded = false;
+    private bool isOpenDoor = false;
 
     void Start()
     {
@@ -36,7 +37,18 @@ public class VRBoardingSystem : MonoBehaviour
         if (isBoarded && telega != null && seatPoint != null)
         {
             xrOrigin.transform.position = seatPoint.position;
+
+            if (!isOpenDoor)
+            {
+                startDoor.transform.position += new Vector3(0, 0.35f, 0) * Time.deltaTime; 
+                if (startDoor.transform.position.y > 7.3f)
+                {
+                    isOpenDoor = true;         
+                    telega.StartMoving();          
+                }
+            }
         }
+
     }
 
     public void ToggleBoarding()
@@ -49,7 +61,7 @@ public class VRBoardingSystem : MonoBehaviour
         {
             BoardTelega();
         }
-        telega.StartMoving();
+        // telega.StartMoving();
     }
 
     public void BoardTelega()
@@ -60,15 +72,15 @@ public class VRBoardingSystem : MonoBehaviour
             return;
         }
 
-        // Отключаем CharacterController чтобы предотвратить конфликты физики
+
         if (xrCharacterController != null)
             xrCharacterController.enabled = false;
 
-        // Перемещаем игрока в точку сиденья
+
         xrOrigin.transform.position = seatPoint.position;
         xrOrigin.transform.rotation = seatPoint.rotation;
 
-        // Делаем игрока дочерним к тележке
+
         xrOrigin.transform.SetParent(telega.transform, true);
 
         Destroy(boardButton);

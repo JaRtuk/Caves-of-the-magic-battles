@@ -3,6 +3,8 @@ using System.Collections;
 
 public class FolowerSpeedController : MonoBehaviour
 {
+    public SplineFollower follower;
+
     public float speedChange;
     public bool addSpeed;
 
@@ -13,22 +15,31 @@ public class FolowerSpeedController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        SplineFollower follower = other.GetComponent<SplineFollower>();
-        FutuRiftCapsuleController capsule = other.GetComponent<FutuRiftCapsuleController>();
+        if (other.gameObject.layer != 6)
+        {
+            Debug.Log("Wrooooooooooong");
+            return;
+        }
+        FutuRiftCapsuleController capsule = follower.GetComponent<FutuRiftCapsuleController>();
 
         if (follower != null)
         {
             float oldSpeed = follower.currentSpeed;
             
             if (addSpeed)
+            {
                 follower.SetSpeed(follower.currentSpeed + speedChange);
+                Debug.Log("Speeeed Chenged");
+            }
             else
+            {
                 follower.SetSpeed(follower.currentSpeed - speedChange);
+                Debug.Log("Speeeed Chenged");
+            }
 
-            // Apply temporary tilt effect during speed change
             if (applyTiltEffect && capsule != null)
             {
-                float tiltDirection = addSpeed ? -1f : 1f; // Backward tilt for acceleration, forward for deceleration
+                float tiltDirection = addSpeed ? -1f : 1f; 
                 StartCoroutine(ApplyTemporaryTilt(capsule, tiltDirection));
             }
         }
@@ -48,7 +59,6 @@ public class FolowerSpeedController : MonoBehaviour
             yield return null;
         }
         
-        // Ensure we return to normal
         capsule.SetManualTilt(0f, capsule.GetMotionData().currentRoll);
     }
 }
