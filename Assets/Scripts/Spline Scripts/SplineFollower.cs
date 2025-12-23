@@ -19,6 +19,7 @@ public class SplineFollower : MonoBehaviour
     [Header("VR Rotation Settings")]
     [Tooltip("Higher values = sharper turns, Lower = smoother. Recommended 2-3 for VR")]
     public float rotationSmoothness = 2.5f;
+
     [Tooltip("More accurate but slightly more expensive")]
     public bool useExactDirection = true;
     [Tooltip("Custom up vector for banking on turns")]
@@ -66,6 +67,16 @@ public class SplineFollower : MonoBehaviour
     {
         if (!isMoving || currentSpline == null || currentSpline.controlPoints.Count < 2 || hasCompletedPath)
             return;
+
+        if (currentSpeed <= 0.04f)
+        {
+            currentSpeed = 1.25f;
+        }
+
+        if (currentSpeed >= 7)
+        {
+            currentSpeed = 1.15f;
+        }
 
         // Move along distance
         traveledDistance += currentSpeed * Time.deltaTime;

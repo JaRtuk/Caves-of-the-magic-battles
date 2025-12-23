@@ -141,8 +141,6 @@ public class EnemyArcher : MonoBehaviour
         GameObject arrowGO = Instantiate(arrowPrefab, spawnPos, Quaternion.LookRotation(finalDir));
 
 
-        if (debugRays) Debug.Log("[EnemyArcherVR] Create arrow at " + spawnPos);
-
         Collider[] ownerCols = GetComponentsInChildren<Collider>();
         Collider[] arrowCols = arrowGO.GetComponentsInChildren<Collider>();
         foreach (var a in arrowCols)

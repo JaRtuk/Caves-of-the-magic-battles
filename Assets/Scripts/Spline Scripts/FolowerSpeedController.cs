@@ -13,8 +13,13 @@ public class FolowerSpeedController : MonoBehaviour
     public float temporaryTiltIntensity = 10f;
     public float tiltDuration = 1.0f;
 
+    private bool is_speed_changed;
+
     void OnTriggerEnter(Collider other)
     {
+        if (is_speed_changed)
+            return; 
+
         if (other.gameObject.layer != 6)
         {
             Debug.Log("Wrooooooooooong");
@@ -29,12 +34,14 @@ public class FolowerSpeedController : MonoBehaviour
             if (addSpeed)
             {
                 follower.SetSpeed(follower.currentSpeed + speedChange);
-                Debug.Log("Speeeed Chenged");
+                is_speed_changed = true;
+                Debug.Log("Add" + follower.currentSpeed);
             }
             else
             {
                 follower.SetSpeed(follower.currentSpeed - speedChange);
-                Debug.Log("Speeeed Chenged");
+                is_speed_changed = true;
+                Debug.Log("Remove" + follower.currentSpeed);
             }
 
             if (applyTiltEffect && capsule != null)
@@ -44,6 +51,7 @@ public class FolowerSpeedController : MonoBehaviour
             }
         }
     }
+
 
     private IEnumerator ApplyTemporaryTilt(FutuRiftCapsuleController capsule, float direction)
     {
