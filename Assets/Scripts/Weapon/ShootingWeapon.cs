@@ -27,6 +27,7 @@ public class ShootingWeapon : MonoBehaviour
     private bool m_bullet_in_aria   = false;
     private bool m_bullet_is_ready  = false;
 
+    private float m_currentHammerAngle = 0f;
     private float m_cylinder_rotation_angle = -60;
     private float m_hammer_rotation_angle   = 46;
 
@@ -141,40 +142,65 @@ public class ShootingWeapon : MonoBehaviour
         }
     }
 
-    private void HammerHit()
-    {
-        if (m_hammer_LP.rotation.eulerAngles.z > 1 && !m_hammer_on_idle)
-        {
-            if (m_hammer_LP.rotation.eulerAngles.z - m_hammer_rotation_angle * Time.deltaTime * 11 <= 0)
-                m_hammer_LP.Rotate(0, 0, -m_hammer_LP.rotation.eulerAngles.z, Space.Self);
-            else
-                m_hammer_LP.Rotate(0, 0, -m_hammer_rotation_angle * Time.deltaTime * 11, Space.Self);
-        }
-        else
-        {
-            if (m_hammer_LP.rotation.eulerAngles.z != 0)
-                m_hammer_LP.localRotation = Quaternion.Euler(0, 0, 0);
 
-            m_hammer_on_idle = true;
-            return;
-        }
-    }
+private void HammerHit()
+{
+    float targetAngle = 0f;
+    float step = m_hammer_rotation_angle * Time.deltaTime * 11f; 
+    m_currentHammerAngle = Mathf.MoveTowards(m_currentHammerAngle, targetAngle, step);
+    m_hammer_LP.localRotation = Quaternion.Euler(0, 0, m_currentHammerAngle);
 
-    private void HammerCharge()
-    {
-        if (m_hammer_LP.rotation.eulerAngles.z < m_hammer_rotation_angle)
-        {
-            m_hammer_LP.Rotate(0, 0, m_hammer_rotation_angle * Time.deltaTime * 7, Space.Self);
-        }
-        else
-        {
-            if (m_hammer_LP.rotation.eulerAngles.z != m_hammer_rotation_angle)
-                m_hammer_LP.Rotate(0,0, -(m_hammer_LP.rotation.eulerAngles.z - m_hammer_rotation_angle));
+    if (Mathf.Approximately(m_currentHammerAngle, 0f))
+        m_hammer_on_idle = true;
+    else
+        m_hammer_on_idle = false;
+}
 
-            m_hammer_on_idle = false;
-            return;
-        }
-    }
+private void HammerCharge()
+{
+    float targetAngle = m_hammer_rotation_angle;
+    float step = m_hammer_rotation_angle * Time.deltaTime * 7f; 
+
+    m_currentHammerAngle = Mathf.MoveTowards(m_currentHammerAngle, targetAngle, step);
+    m_hammer_LP.localRotation = Quaternion.Euler(0, 0, m_currentHammerAngle);
+
+    if (Mathf.Approximately(m_currentHammerAngle, m_hammer_rotation_angle))
+        m_hammer_on_idle = false; 
+}
+    // private void HammerHit()
+    // {
+    //     if (m_hammer_LP.rotation.eulerAngles.z > 1 && !m_hammer_on_idle)
+    //     {
+    //         if (m_hammer_LP.rotation.eulerAngles.z - m_hammer_rotation_angle * Time.deltaTime * 11 <= 0)
+    //             m_hammer_LP.Rotate(0, 0, -m_hammer_LP.rotation.eulerAngles.z, Space.Self);
+    //         else
+    //             m_hammer_LP.Rotate(0, 0, -m_hammer_rotation_angle * Time.deltaTime * 11, Space.Self);
+    //     }
+    //     else
+    //     {
+    //         if (m_hammer_LP.rotation.eulerAngles.z != 0)
+    //             m_hammer_LP.localRotation = Quaternion.Euler(0, 0, 0);
+
+    //         m_hammer_on_idle = true;
+    //         return;
+    //     }
+    // }
+
+    // private void HammerCharge()
+    // {
+    //     if (m_hammer_LP.rotation.eulerAngles.z < m_hammer_rotation_angle)
+    //     {
+    //         m_hammer_LP.Rotate(0, 0, m_hammer_rotation_angle * Time.deltaTime * 7, Space.Self);
+    //     }
+    //     else
+    //     {
+    //         if (m_hammer_LP.rotation.eulerAngles.z != m_hammer_rotation_angle)
+    //             m_hammer_LP.Rotate(0,0, -(m_hammer_LP.rotation.eulerAngles.z - m_hammer_rotation_angle));
+
+    //         m_hammer_on_idle = false;
+    //         return;
+    //     }
+    // }
     
     private void RotateBaraban()
     {

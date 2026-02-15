@@ -38996,7 +38996,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   follower: {fileID: 794629709}
   speedChange: 0.1
-  addSpeed: 0
+  addSpeed: 1
   applyTiltEffect: 1
   temporaryTiltIntensity: 10
   tiltDuration: 1
@@ -45029,7 +45029,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   follower: {fileID: 794629709}
   speedChange: 0.3
-  addSpeed: 0
+  addSpeed: 1
   applyTiltEffect: 1
   temporaryTiltIntensity: 10
   tiltDuration: 1
@@ -52766,15 +52766,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 164856941173739165, guid: 6c7007cc152ffb644b7461858684f0d6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.06
+      value: -1.562
       objectReference: {fileID: 0}
     - target: {fileID: 164856941173739165, guid: 6c7007cc152ffb644b7461858684f0d6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.714
+      value: 1.856
       objectReference: {fileID: 0}
     - target: {fileID: 164856941173739165, guid: 6c7007cc152ffb644b7461858684f0d6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.97
+      value: -5.721
       objectReference: {fileID: 0}
     - target: {fileID: 164856941173739165, guid: 6c7007cc152ffb644b7461858684f0d6, type: 3}
       propertyPath: m_LocalRotation.w

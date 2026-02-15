@@ -1006,7 +1006,7 @@
                     "path": "<XRController>{RightHand}/{SecondaryButton}",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Generic XR Controller",
                     "action": "Charge",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1639,6 +1639,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "7aae78ee-87a0-4032-9804-66eec065779f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Charge",
+                    "type": "Button",
+                    "id": "73607ee2-9e25-4309-a289-b5cc4da6464c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1804,6 +1822,28 @@
                     "processors": "ScaleVector2(x=0),StickDeadzone",
                     "groups": "Generic XR Controller",
                     "action": "Scale Delta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a2a7691-3d9b-4f8d-9760-e07d7e8f1fe5",
+                    "path": "<XRController>{RightHand}/{PrimaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Generic XR Controller",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "633cb5ea-cbeb-49e0-a24c-e6a32f68220e",
+                    "path": "<XRController>{RightHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Generic XR Controller",
+                    "action": "Charge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
