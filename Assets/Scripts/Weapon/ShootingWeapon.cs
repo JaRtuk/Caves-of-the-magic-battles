@@ -35,11 +35,11 @@ public class ShootingWeapon : MonoBehaviour
     {
         shootAction.action.Enable();
         shootAction.action.performed += ToggleShoot;
-        InputSystem.onDeviceChange += OnDeviceChange;
+        //InputSystem.onDeviceChange += OnDeviceChange;
 
         chargeAction.action.Enable();
         chargeAction.action.performed += ToggleCharge;
-        InputSystem.onDeviceChange += OnDeviceChange;
+        //InputSystem.onDeviceChange += OnDeviceChange;
     }
 
     private void Start()
@@ -102,24 +102,24 @@ public class ShootingWeapon : MonoBehaviour
             m_is_hammer_charge = true;
     }
     
-    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
-    {
-        switch (change)
-        {
-            case InputDeviceChange.Disconnected:
-                shootAction.action.Disable();
-                shootAction.action.performed -= ToggleShoot;
-                chargeAction.action.Disable();
-                chargeAction.action.performed -= ToggleCharge;
-                break;
-            case InputDeviceChange.Reconnected:
-                shootAction.action.Enable();
-                shootAction.action.performed += ToggleShoot;
-                chargeAction.action.Enable();
-                chargeAction.action.performed += ToggleCharge;
-                break;
-        }
-    }
+    // private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    // {
+    //     switch (change)
+    //     {
+    //         case InputDeviceChange.Disconnected:
+    //             shootAction.action.Disable();
+    //             shootAction.action.performed -= ToggleShoot;
+    //             chargeAction.action.Disable();
+    //             chargeAction.action.performed -= ToggleCharge;
+    //             break;
+    //         case InputDeviceChange.Reconnected:
+    //             shootAction.action.Enable();
+    //             shootAction.action.performed += ToggleShoot;
+    //             chargeAction.action.Enable();
+    //             chargeAction.action.performed += ToggleCharge;
+    //             break;
+    //     }
+    // }
 
     private void BulletShoot()
     {
@@ -141,7 +141,6 @@ public class ShootingWeapon : MonoBehaviour
             Bullet = other.transform;
         }
     }
-
 
 private void HammerHit()
 {
@@ -231,8 +230,8 @@ private void HammerCharge()
         shootAction.action.Disable();
         shootAction.action.performed -= ToggleShoot;
         chargeAction.action.Disable();
-        chargeAction.action.performed -= ToggleShoot;
-        InputSystem.onDeviceChange -= OnDeviceChange;
+        chargeAction.action.performed -= ToggleCharge; 
+        //InputSystem.onDeviceChange -= OnDeviceChange;
     }
 
     private void CheckForObjectsInsideTrigger()

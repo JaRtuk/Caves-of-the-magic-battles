@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
     {
         if (startShoot)
         {
-            bullet.localPosition += m_shoot_dir * Time.deltaTime * 7;
+            bullet.localPosition += m_shoot_dir * Time.deltaTime * 9;
         }
     }
 
@@ -40,7 +40,7 @@ public class Bullet : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             var hp = other.GetComponent<EnemyArcher>();
-            if (hp != null) hp.TakeDamage(50);
+            if (hp != null) hp.TakeDamage(50000);
         }
 
         if (canDestroy)
@@ -56,7 +56,7 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             var hp = collision.gameObject.GetComponent<EnemyArcher>();
-            if (hp != null) hp.TakeDamage(50);
+            if (hp != null) hp.TakeDamage(50000);
         }
 
         if (canDestroy) 
